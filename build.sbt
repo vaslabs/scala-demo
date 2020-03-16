@@ -6,13 +6,16 @@ scalaVersion := "2.13.1"
 
 
 lazy val demo = (project in file("."))
+  .settings(noPublishSettings)
   .aggregate(endpoints, service)
 
 lazy val endpoints =
   (project in file("endpoints"))
       .settings(
         libraryDependencies ++= Dependencies.Modules.endpoints
-      )
+      ).settings(noPublishSettings)
+
+
 
 lazy val service = (project in file("service"))
   .settings(libraryDependencies ++= Dependencies.Modules.service)
@@ -27,4 +30,8 @@ lazy val dockerSettings = Seq(
   dockerRepository := Some("git.hellosoda.com:5000"),
   dockerUsername := Some("eng"),
   dockerExposedPorts := List(8080)
+)
+
+lazy val noPublishSettings = Seq(
+  publish / skip := true
 )
