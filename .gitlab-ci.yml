@@ -1,0 +1,7 @@
+stages:
+  - test
+
+test:
+  image: hseeberger/scala-sbt:8u222_1.3.7_2.13.1
+  script:
+    - sbt test
