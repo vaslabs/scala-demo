@@ -1,7 +1,18 @@
 stages:
   - test
+  - build
 
 test:
   image: hseeberger/scala-sbt:8u242_1.3.8_2.13.1
   script:
     - sbt test
+
+
+build:
+  services:
+    - docker:dind
+  before_script:
+    - curl -sSL https://get.docker.com/ | sh
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - sbt docker:publish
