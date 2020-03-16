@@ -4,11 +4,13 @@ stages:
 
 test:
   image: hseeberger/scala-sbt:8u242_1.3.8_2.13.1
+  stage: test
   script:
     - sbt test
 
 
 build:
+  stage: build
   services:
     - docker:dind
   before_script:
