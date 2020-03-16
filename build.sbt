@@ -27,7 +27,7 @@ lazy val service = (project in file("service"))
 lazy val dockerSettings = Seq(
   (packageName in Docker) := "scala-demo",
   dockerBaseImage := "openjdk:8u191-jre-alpine3.8",
-  dockerRepository := Some("git.hellosoda.com:5000"),
+  dockerRepository := Some("git.hellosoda.com:5005"),
   dockerUsername := Some("eng"),
   dockerExposedPorts := List(8080)
 )
