@@ -2,7 +2,7 @@ name := "scala-demo"
 
 version := "0.1"
 
-scalaVersion := "2.13.1"
+scalaVersion in ThisBuild := "2.13.1"
 
 
 lazy val demo = (project in file("."))
