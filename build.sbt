@@ -38,5 +38,6 @@ lazy val noPublishSettings = Seq(
 )
 
 lazy val versioningSettings = Seq(
-  dynverSeparator in ThisBuild := "-"
+  dynverSeparator in ThisBuild := "-",
+  dynverVTagPrefix in ThisBuild := false
 )
