@@ -21,6 +21,7 @@ lazy val service = (project in file("service"))
   .settings(libraryDependencies ++= Dependencies.Modules.service)
   .enablePlugins(DockerPlugin, JavaAppPackaging, AshScriptPlugin)
   .settings(dockerSettings)
+  .settings(versioningSettings)
   .dependsOn(endpoints)
 
 
@@ -34,4 +35,8 @@ lazy val dockerSettings = Seq(
 
 lazy val noPublishSettings = Seq(
   publish / skip := true
+)
+
+lazy val versioningSettings = Seq(
+  dynverSeparator in ThisBuild := "-"
 )
