@@ -1,6 +1,28 @@
 stages:
   - test
-  - build
+  - publish-image
+  - deploy
+
+
+.publish-template:
+  stage: publish-image
+  image: hseeberger/scala-sbt:8u242_1.3.8_2.13.1
+  before_script:
+    - curl -sSL https://get.docker.com/ | sh
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - sbt docker:publish
+    - sbt kubeyml:gen
+  artifacts:
+    untracked: true
+    paths:
+      - service/target/kubeyml/deployment.yml
+
+.deploy-template:
+  stage: deploy
+  image: git.hellosoda.com:5005/infra/kubernetes/kubectl
+  script:
+    - kubectl apply -f service/target/kubeyml/deployment.yml
 
 test:
   image: hseeberger/scala-sbt:8u242_1.3.8_2.13.1
@@ -8,14 +30,7 @@ test:
   script:
     - sbt test
 
+publish:
+  extends: .publish-template
 
-build:
-  image: hseeberger/scala-sbt:8u242_1.3.8_2.13.1
-  stage: build
-  services:
-    - docker:dind
-  before_script:
-    - curl -sSL https://get.docker.com/ | sh
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-  script:
-    - sbt docker:publish
+
