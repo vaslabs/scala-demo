@@ -7,6 +7,8 @@ stages:
 .publish-template:
   stage: publish-image
   image: hseeberger/scala-sbt:8u242_1.3.8_2.13.1
+  services:
+    - docker:dind
   before_script:
     - curl -sSL https://get.docker.com/ | sh
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
