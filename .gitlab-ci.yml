@@ -18,7 +18,7 @@ stages:
   artifacts:
     untracked: false
     paths:
-      - service/target/kubeyml/deployment.yml
+      - service/target/kubeyml/*.yml
 
 .deploy-template:
   stage: deploy
