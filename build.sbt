@@ -22,6 +22,9 @@ lazy val service = (project in file("service"))
   .enablePlugins(DockerPlugin, JavaAppPackaging, AshScriptPlugin)
   .settings(dockerSettings)
   .settings(versioningSettings)
+  .enablePlugins(KubeDeploymentPlugin, KubeServicePlugin, KubeIngressPlugin)
+  .settings(deploymentSettings)
+  .settings(ingressSettings)
   .dependsOn(endpoints)
 
 
@@ -40,4 +43,33 @@ lazy val noPublishSettings = Seq(
 lazy val versioningSettings = Seq(
   dynverSeparator in ThisBuild := "-",
   dynverVTagPrefix in ThisBuild := false
+)
+
+import kubeyml.deployment.plugin.Keys._
+import kubeyml.deployment.{Resource, Cpu, Memory}
+import kubeyml.ingress.plugin.Keys._
+import kubeyml.ingress.{Host, HttpRule, ServiceMapping, Path => IngressPath}
+import kubeyml.service.plugin.Keys
+import kubeyml.deployment.api._
+import kubeyml.ingress.api._
+
+lazy val deploymentSettings = Seq(
+  namespace in kube := "scala-demo",
+  application in kube := "scala-demo-service",
+  resourceLimits in kube := Resource(Cpu.fromCores(2), Memory(4096))
+)
+
+val ingressSettings = Seq(
+  ingressRules in kube := List(
+    HttpRule(
+      Host("scala-demo.hellosoda.com"),
+      List(
+        IngressPath(ServiceMapping((Keys.service in kube).value.name, 8080), "/")
+      )
+    )
+  ),
+  (ingressAnnotations in kube) := Map(
+    Annotate.nginxIngress(), // this adds kubernetes.io/ingress.class: nginx
+    Annotate.nginxRewriteTarget("/"), //this adds nginx.ingres
+  )
 )
