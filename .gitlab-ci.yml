@@ -25,6 +25,8 @@ stages:
   image: $CI_DEPLOYMENT_IMAGE
   script:
     - kubectl apply -f service/target/kubeyml/deployment.yml
+    - kubectl apply -f service/target/kubeyml/service.yml
+    - kubectl apply -f service/target/kubeyml/ingress.yml
 
 test:
   image: hseeberger/scala-sbt:8u242_1.3.8_2.13.1
