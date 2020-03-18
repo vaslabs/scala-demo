@@ -16,13 +16,13 @@ stages:
     - sbt docker:publish
     - sbt kubeyml:gen
   artifacts:
-    untracked: true
+    untracked: false
     paths:
       - service/target/kubeyml/deployment.yml
 
 .deploy-template:
   stage: deploy
-  image: git.hellosoda.com:5005/infra/kubernetes/kubectl
+  image: $CI_DEPLOYMENT_IMAGE
   script:
     - kubectl apply -f service/target/kubeyml/deployment.yml
 
