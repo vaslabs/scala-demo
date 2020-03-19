@@ -27,11 +27,11 @@ lazy val service = (project in file("service"))
   .settings(ingressSettings)
   .dependsOn(endpoints)
 
-
+lazy val repo = sys.env.get("CI_REGISTRY")
 lazy val dockerSettings = Seq(
   (packageName in Docker) := "scala-demo",
   dockerBaseImage := "openjdk:8u191-jre-alpine3.8",
-  dockerRepository := Some("git.hellosoda.com:5005"),
+  dockerRepository := repo,
   dockerUsername := Some("eng"),
   dockerExposedPorts := List(8080)
 )
@@ -59,10 +59,12 @@ lazy val deploymentSettings = Seq(
   resourceLimits in kube := Resource(Cpu.fromCores(2), Memory(4096))
 )
 
+lazy val domain = sys.env.getOrElse("SCALA_DEMO_HOST", "localhost")
+
 val ingressSettings = Seq(
   ingressRules in kube := List(
     HttpRule(
-      Host("scala-demo.hellosoda.com"),
+      Host(domain),
       List(
         IngressPath(ServiceMapping((Keys.service in kube).value.name, 8080), "/")
       )
