@@ -16,7 +16,7 @@ object routes {
     case (a,b) => Future.successful(Right(AdditionOp.op(a, b)))
   } ~ addition.toRoute {
     case Addition(a,b) => Future.successful(Right(Sum(AdditionOp.op(a, b))))
-  } ~ path("http") {
+  } ~ path("health") {
     get {
       complete(StatusCodes.OK)
     }
